@@ -8,7 +8,7 @@ To install the takesnapshot.sh do the following
 ```
 mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
-sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/takesnapshot.sh && sudo +x takesnapshot.sh
+sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/takesnapshot.sh && sudo chmod +x takesnapshot.sh
 ```
 
 Now we can add this to crontab manually for now and choose to run it every 24hours etc
