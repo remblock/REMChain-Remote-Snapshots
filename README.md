@@ -43,8 +43,7 @@ Once everything has synced use Ctrl + C to cancel out but please fire it up righ
 ```
 remnode --config-dir ./config/ --data-dir ./data/ >> remnode.log 2>&1 &
 ```
-Now when you press Ctrl + C it will not completely stop.  Pretty weird behaviour I thought.
-
+Now when you press Ctrl + C, it will run successfully in the background this time.
 
 
 
