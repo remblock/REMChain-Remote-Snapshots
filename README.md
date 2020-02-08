@@ -1,4 +1,4 @@
-# REMChain Snapshots - Beta
+# REMChain Snapshots
 
 #IMPORTANT PLEASE READ
 
