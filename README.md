@@ -38,7 +38,12 @@ mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
 sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh && ./restoresnapshot.sh
 ```
+Once everything has synced use Ctrl + C to cancel out but please fire it up right away using the code below
 
+```
+remnode --config-dir ./config/ --data-dir ./data/ >> remnode.log 2>&1 &
+```
+Now when you press Ctrl + C it will not completely stop.  Pretty weird behaviour I thought.
 
 
 
