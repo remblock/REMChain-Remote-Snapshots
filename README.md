@@ -1,5 +1,5 @@
 # remchain-snapshot
-This code takes the snapshots on my node to send them to my webserver vps through ssh
+This code TAKES the snapshots on my node to send them to my webserver vps through ssh. If you want to restore please keep scrolling further down
 
 # takesnapshot.sh
 This file takes the snapshot, compresses it and sends it to the VPS. This is for my own benefit or for anyone else that would like to take a snapshot (must have the producer API enabled).
