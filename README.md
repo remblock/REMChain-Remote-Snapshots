@@ -5,6 +5,12 @@ This readme is split into two parts.
 
 # Taking a snapshot
 
+## Install dependencies
+* [jq](https://stedolan.github.io/jq/) - command line json parser
+```
+sudo apt-get install jq -y
+```
+
 ## takesnapshot.sh
 This file takes the snapshot, compresses it and sends it to the VPS. This is for my own benefit or for anyone else that would like to take a snapshot (must have the producer API enabled).
 
