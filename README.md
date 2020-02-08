@@ -3,7 +3,7 @@ This readme is split into two parts.
 1)  Taking a snapshot i.e. what i do to upload them to my webserver for you to be able to download them.
 2)  Restoring from a snapshot. 
 
-#Taking a snapshot
+# Taking a snapshot
 
 ## takesnapshot.sh
 This file takes the snapshot, compresses it and sends it to the VPS. This is for my own benefit or for anyone else that would like to take a snapshot (must have the producer API enabled).
