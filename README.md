@@ -31,6 +31,7 @@ cd /root/data/snapshots/
 sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh
 ```
 # Just get me up and running fast already!
+The code below is identical to the code above but it actually runs it immediately afterwards.
 
 ```
 mkdir -p /root/data/snapshots/
