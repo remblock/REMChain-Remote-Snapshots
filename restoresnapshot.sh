@@ -47,5 +47,6 @@ rm -rf ./blocks*/
 rm -rf ./state
 cd ~
 remnode --config-dir ./config/ --snapshot $(ls -t $binfile | head -n1) --data-dir ./data/ >> remnode.log 2>&1 &
+sleep 3
 tail -f remnode.log
 
