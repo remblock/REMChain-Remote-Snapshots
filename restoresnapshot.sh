@@ -32,6 +32,8 @@
 #░░░░░   ░░░░░  ░░░░░░  ░░░░░░     ░░░░░   ░░░░░░  ░░░░░      ░░░░░░  ░░░░░                  #
 
 # path definitions
+logfile=/root/remnode.log
+configfolder=/root/config
 datafolder=/root/data
 blocksfolder=$datafolder/blocks
 statefolder=$datafolder/state
@@ -45,7 +47,7 @@ cd $lastdownloadfolder
 #download the latest snapshot
 latestsnapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
 wget -c https://www.geordier.co.uk/snapshots/$latestsnapshot -O - | sudo tar -xz --strip=4
-binfile=$lastdownloadfolder*.bin
+binfile=$lastdownloadfolder/*.bin
 
 # gracefully stop remnode
 remnode_pid=$(pgrep remnode)
@@ -65,7 +67,5 @@ rm -rf $statefolder
 
 # start remnode with snapshot
 cd ~
-remnode --config-dir ./config/ --snapshot $(ls -t $binfile | head -n1) --data-dir ./data/ >> remnode.log 2>&1 &
-sleep 3
-tail -f remnode.log
-
+remnode --config-dir $configfolder/ --snapshot $binfile --data-dir $datafolder/ >> $logfile 2>&1 &
+tail -f $logfile
