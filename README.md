@@ -21,6 +21,16 @@ Now add the following line to run it at every 3am
 0 3 * * * /root/data/snapshots/takesnapshot.sh
 ```
 
+# restoresnapshot.sh
+
+This will download the restoresnapshot.sh to your snapshot folder
+
+```
+mkdir -p /root/data/snapshots/
+cd /root/data/snapshots/
+sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh
+```
+
 
 
 
