@@ -68,4 +68,5 @@ rm -rf $statefolder
 # start remnode with snapshot
 cd ~
 remnode --config-dir $configfolder/ --snapshot $binfile --data-dir $datafolder/ >> $logfile 2>&1 &
+sleep 3
 tail -f $logfile
