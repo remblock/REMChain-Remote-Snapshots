@@ -1,4 +1,4 @@
-# REMChain Snapshots
+# REMChain Snapshots - Beta
 This readme is split into two parts.  
 1)  Taking a snapshot i.e. what i do to upload them to my webserver for you to be able to download them.
 2)  Restoring from a snapshot. 
