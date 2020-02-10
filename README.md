@@ -2,7 +2,7 @@
 
 #IMPORTANT PLEASE READ
 
-If you wish to retain a historical API, be warned, this solution will DELETE any previous block data as at the moment I do not offer blocks.log files to go with the snapshot.  This may be covered in a future improvement to this solution.
+If you wish to retain a historical API, be warned, this solution will DELETE any previous block data as at the moment I do not offer blocks.log files to go with the snapshot.  This will be covered in a future improvement to this solution.
 ---
 This readme is split into two parts.  
 1)  Taking a snapshot i.e. what i do to upload them to my webserver for you to be able to download them.
