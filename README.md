@@ -23,7 +23,8 @@ To install the takesnapshot.sh do the following
 ```
 mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
-sudo rm -rf takesnapshot.sh && sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/takesnapshot.sh && sudo chmod +x takesnapshot.sh
+sudo rm -rf takesnapshot.sh
+sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/takesnapshot.sh && sudo chmod +x takesnapshot.sh
 ```
 
 Now we can add this to crontab manually for now and choose to run it every 24hours etc
@@ -43,7 +44,8 @@ This will download the restoresnapshot.sh to your snapshot folder WITHOUT runnin
 ```
 mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
-sudo rm -rf restoresnapshot.sh && sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh
+sudo rm -rf restoresnapshot.sh
+sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh
 ```
 ## restoresnapshot.sh - With autorun
 The code below is identical to the code above but it actually runs it immediately afterwards.
@@ -51,7 +53,8 @@ The code below is identical to the code above but it actually runs it immediatel
 ```
 mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
-sudo rm -rf restoresnapshot.sh && sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh && ./restoresnapshot.sh
+sudo rm -rf restoresnapshot.sh
+sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh && ./restoresnapshot.sh
 ```
 Once everything has synced use Ctrl + C to cancel out but please fire it up right away using the code below
 
