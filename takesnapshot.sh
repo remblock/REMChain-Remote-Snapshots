@@ -1,7 +1,7 @@
 #!/bin/bash
 ###### Parameter Section #####
 sshportno=466
-datename=$(date +%Y-%m-%d)
+datename=$(date +%Y-%m-%d_%H-%M)
 shcreate=compressandsendlastsnapshot.sh
 cd ~
 compressedfolder=/root/data/snapshots/compressed/
