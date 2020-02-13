@@ -17,5 +17,6 @@ touch $shcreate && chmod +x $shcreate
 ls -F *.gz | head -n -5 | xargs -r rm
 
 echo "tar -cvzf $filename $snapname" >> $shcreate
+rm -f $snapname
 echo "rsync -rv -e 'ssh -p $sshportno' --progress $filename root@website.geordier.co.uk:/var/www/geordier.co.uk/snapshots" >> $shcreate
 ./$shcreate
