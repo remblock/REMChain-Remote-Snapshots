@@ -51,7 +51,7 @@ The code below is identical to the code above but it actually runs it immediatel
 ```
 mkdir -p /root/data/snapshots/
 cd /root/data/snapshots/
-sudo wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh && ./restoresnapshot.sh
+sudo rm -r restoresnapshot.sh && wget https://raw.githubusercontent.com/Geordie-R/remchain-snapshot/master/restoresnapshot.sh && sudo chmod +x restoresnapshot.sh && ./restoresnapshot.sh
 ```
 Once everything has synced use Ctrl + C to cancel out but please fire it up right away using the code below
 
