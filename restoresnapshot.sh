@@ -43,6 +43,7 @@ lastdownloadfolder=$snapshotsfolder/lastdownload
 # create download folder in snapshots
 mkdir -p $lastdownloadfolder
 cd $lastdownloadfolder
+rm -f *.bin
 
 #download the latest snapshot
 latestsnapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
