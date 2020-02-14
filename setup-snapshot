@@ -99,6 +99,7 @@ then
     sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
     chmod +x $create_testchain_dir/take-snapshot
     chmod +x $create_testchain_dir/restore-snapshot
+    rm $create_testchain_dir/setup-snapshot
     if [ ! -z "$testchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$testchain_cron_cmd" &>/dev/null
     then
       (crontab -u root -l ; echo "0 3 * * * $testchain_cron_cmd") | crontab -u root -
@@ -119,6 +120,7 @@ then
     sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
     chmod +x $create_remchain_dir/take-snapshot
     chmod +x $create_remchain_dir/restore-snapshot
+    rm $create_remchain_dir/setup-snapshot
     if [ ! -z "$remchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$remchain_cron_cmd" &>/dev/null
     then
       (crontab -u root -l ; echo "0 3 * * * $remchain_cron_cmd") | crontab -u root -
@@ -131,3 +133,4 @@ fi
 #----------------------------------------------------------------------------------------------------#
 
 sudo apt-get install jq -y
+rm ./setup-snapshot
