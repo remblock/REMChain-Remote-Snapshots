@@ -79,9 +79,11 @@ then
   echo ""
   if get_user_answer_yn "RESTORING TESTCHAIN SNAPSHOT"
   then
+    echo ""
     testchain_enabled=true
     printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
   else
+    echo ""
     testchain_enabled=false
     printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
   fi
@@ -127,7 +129,8 @@ state_folder=$data_folder/remchain/state
 last_download_folder=$snapshot_folder/remchain/lastdownload
 cd $last_download_folder
 rm -f *.bin
-latest_snapshot=$(last_download_folder)
+latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
+wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
 bin_file=$last_download_folder/*.bin
 remnode_pid=$(pgrep remnode)
 if [ ! -z "$remnode_pid" ]
