@@ -40,6 +40,11 @@ then
   testchain_blocks_folder=$data_folder/testchain/blocks
   state_folder=$data_folder/testchain/state
   last_download_folder=$snapshot_folder/testchain/lastdownload
+  if [ ! -d "$last_download_folder" ]
+  then
+    mkdir -p "$last_download_folder"
+    cp -p "$0" "$last_download_folder"
+  fi
   cd $last_download_folder
   rm -f *.bin
   latest_snapshot=$(last_download_folder)
@@ -69,6 +74,11 @@ fi
 remchain_blocks_folder=$data_folder/remchain/blocks
 state_folder=$data_folder/remchain/state
 last_download_folder=$snapshot_folder/remchain/lastdownload
+if [ ! -d "$last_download_folder" ]
+then
+  mkdir -p "$last_download_folder"
+  cp -p "$0" "$last_download_folder"
+fi
 cd $last_download_folder
 rm -f *.bin
 latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
