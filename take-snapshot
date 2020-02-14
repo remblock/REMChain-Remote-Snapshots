@@ -19,6 +19,7 @@ fi
 #----------------------------------------------------------------------------------------------------#
 
 date_name=$(date +%Y-%m-%d_%H-%M)
+config_file="/root/data/snapshots/config"
 remchain_compressed_folder=/root/data/snapshots/compressed/
 testchain_compressed_folder=/root/data/snapshots/compressed/
 
