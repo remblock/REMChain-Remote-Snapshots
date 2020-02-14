@@ -22,9 +22,9 @@ data_folder=/root/data
 log_file=/root/remnode.log
 config_folder=/root/config
 snapshot_folder=$data_folder/snapshots
+config_file="/root/data/snapshots/config"
 create_remchain_dir="/root/data/snapshots/remchain"
 create_testchain_dir="/root/data/snapshots/testchain"
-config_file="/root/data/snapshots/config"
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
