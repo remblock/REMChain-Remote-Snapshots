@@ -71,6 +71,7 @@ then
   echo "#Configuration file for the unregprod script" > "$config_file"
   echo "#Make the entries as variable=value" >> "$config_file"
   echo " " >> "$config_file"
+fi
   
 #----------------------------------------------------------------------------------------------------#
 # GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
