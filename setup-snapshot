@@ -4,6 +4,7 @@
 #                                       SETUP-REMCHAIN-SNAPSHOTS                                     #
 #****************************************************************************************************#
 
+config_file="/root/data/snapshots/config"
 create_snapshot_dir="/root/data/snapshots/"
 create_remchain_dir="/root/data/snapshots/remchain"
 create_testchain_dir="/root/data/snapshots/testchain"
