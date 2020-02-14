@@ -88,6 +88,11 @@ then
     printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
   fi
 fi
+
+#----------------------------------------------------------------------------------------------------#
+# MAIN PART OF THE SCRIPT                                                                            #
+#----------------------------------------------------------------------------------------------------#
+
 if $testchain_enabled
 then  
   if [ ! -d "$create_testchain_dir" ]
