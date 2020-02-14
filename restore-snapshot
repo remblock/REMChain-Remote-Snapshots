@@ -44,6 +44,7 @@ then
   then
     mkdir -p "$last_download_folder"
     cp -p "$0" "$last_download_folder"
+    exit 1
   fi
   cd $last_download_folder
   rm -f *.bin
@@ -66,38 +67,40 @@ then
    remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
    sleep 3
    tail -f $log_file
-elif [ ! -d "$create_remchain_dir" ]
-then
-  mkdir -p "$create_remchain_dir"
-  cp -p "$0" "$create_remchain_dir"
-fi
-remchain_blocks_folder=$data_folder/remchain/blocks
-state_folder=$data_folder/remchain/state
-last_download_folder=$snapshot_folder/remchain/lastdownload
-if [ ! -d "$last_download_folder" ]
-then
-  mkdir -p "$last_download_folder"
-  cp -p "$0" "$last_download_folder"
-fi
-cd $last_download_folder
-rm -f *.bin
-latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
-wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
-bin_file=$last_download_folder/*.bin
-remnode_pid=$(pgrep remnode)
-if [ ! -z "$remnode_pid" ]
-then
-  if ps -p $remnode_pid > /dev/null
+else
+  if [ ! -d "$create_remchain_dir" ]
   then
-    kill -SIGINT $remnode_pid
+    mkdir -p "$create_remchain_dir"
+    cp -p "$0" "$create_remchain_dir"
   fi
-  while ps -p $remnode_pid > /dev/null; do
-  sleep 1
-  done
+  remchain_blocks_folder=$data_folder/remchain/blocks
+  state_folder=$data_folder/remchain/state
+  last_download_folder=$snapshot_folder/remchain/lastdownload
+  if [ ! -d "$last_download_folder" ]
+  then
+    mkdir -p "$last_download_folder"
+    cp -p "$0" "$last_download_folder"
+  fi
+  cd $last_download_folder
+  rm -f *.bin
+  latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
+  wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
+  bin_file=$last_download_folder/*.bin
+  remnode_pid=$(pgrep remnode)
+  if [ ! -z "$remnode_pid" ]
+  then
+    if ps -p $remnode_pid > /dev/null
+    then
+      kill -SIGINT $remnode_pid
+    fi
+    while ps -p $remnode_pid > /dev/null; do
+    sleep 1
+    done
+  fi
+  rm -rf $remchain_blocks_folder*/
+  rm -rf $state_folder
+  cd ~
+  remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
+  sleep 3
+  tail -f $log_file
 fi
-rm -rf $remchain_blocks_folder*/
-rm -rf $state_folder
-cd ~
-remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
-sleep 3
-tail -f $log_file
