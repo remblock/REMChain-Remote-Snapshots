@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#****************************************************************************************************#
+#                                       SETUP-REMCHAIN-SNAPSHOTS                                     #
+#****************************************************************************************************#
+
+create_snapshot_dir="/root/data/snapshots/"
+create_remchain_dir="/root/data/snapshots/remchain"
+create_testchain_dir="/root/data/snapshots/testchain"
+cron_cmd="/root/data/snapshots/take-snapshot"
+
+#----------------------------------------------------------------------------------------------------#
+# REMOVE EXISTING CRONTAB LINE IF IT EXIST WHILE CONFIG DOESN'T                                      #
+#----------------------------------------------------------------------------------------------------#
+
+if [ ! -f "$config_file" ]
+then
+crontab -u root -l | grep -v ^# | grep -v "$cron_cmd" | crontab -u root -
+fi
+
+#----------------------------------------------------------------------------------------------------#
+# CREATE DIRECTORY IF IT DOESN'T EXIST                                                               #
+#----------------------------------------------------------------------------------------------------#
+
+if [ ! -d "$create_snapshot_dir" ]
+then
+  mkdir -p "$create_snapshot_dir"
+  cp -p "$0" "$create_snapshot_dir"
+fi
+
+if [ ! -d "$create_remchain_dir" ]
+then
+  mkdir -p "$create_remchain_dir"
+  cp -p "$0" "$create_remchain_dir"
+fi
+
+if [ ! -d "$create_testchain_dir" ]
+then
+  mkdir -p "$create_testchain_dir"
+  cp -p "$0" "$create_testchain_dir"
+fi
+
+#----------------------------------------------------------------------------------------------------#
+# INSTALL REMCHAIN SNAPSHOT DEPENDENCIES                                                             #
+#----------------------------------------------------------------------------------------------------#
+
+sudo apt-get install jq -y
+cd $create_testchain_dir
+sudo rm -rf take-snapshot
+sudo rm -rf restore-snapshot
+sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_remchain_dir
+sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_testchain_dir
+sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
+sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
+
+#----------------------------------------------------------------------------------------------------#
+# INSTALL CRONTAB LINE IF IT DOESN'T EXIST                                                           #
+#----------------------------------------------------------------------------------------------------#
+
+if [ ! -z "$cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$cron_cmd" &>/dev/null
+then
+  (crontab -u root -l ; echo "0 3 * * * $cron_cmd") | crontab -u root -
+fi
