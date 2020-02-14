@@ -72,7 +72,7 @@ then
   echo "#Make the entries as variable=value" >> "$config_file"
   echo " " >> "$config_file"
 fi
-  
+
 #----------------------------------------------------------------------------------------------------#
 # GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
 #----------------------------------------------------------------------------------------------------#
@@ -98,6 +98,8 @@ then
     sudo rm -rf restore-snapshot
     sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_testchain_dir
     sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
+    chmod +x $create_testchain_dir/take-snapshot
+    chmod +x $create_testchain_dir/restore-snapshot
     if [ ! -z "$testchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$testchain_cron_cmd" &>/dev/null
     then
       (crontab -u root -l ; echo "0 3 * * * $testchain_cron_cmd") | crontab -u root -
@@ -116,6 +118,8 @@ then
     sudo rm -rf restore-snapshot
     sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_remchain_dir
     sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
+    chmod +x $create_remchain_dir/take-snapshot
+    chmod +x $create_remchain_dir/restore-snapshot
     if [ ! -z "$remchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$remchain_cron_cmd" &>/dev/null
     then
       (crontab -u root -l ; echo "0 3 * * * $remchain_cron_cmd") | crontab -u root -
