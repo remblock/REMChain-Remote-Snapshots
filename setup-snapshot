@@ -8,7 +8,8 @@ config_file="/root/data/snapshots/config"
 create_snapshot_dir="/root/data/snapshots/"
 create_remchain_dir="/root/data/snapshots/remchain"
 create_testchain_dir="/root/data/snapshots/testchain"
-cron_cmd="/root/data/snapshots/take-snapshot"
+remchain_cron_cmd="/root/data/snapshots/remchain/take-snapshot"
+testchain_cron_cmd="/root/data/snapshots/testchain/take-snapshot"
 
 #----------------------------------------------------------------------------------------------------#
 # REMOVE EXISTING CRONTAB LINE IF IT EXIST WHILE CONFIG DOESN'T                                      #
@@ -16,6 +17,7 @@ cron_cmd="/root/data/snapshots/take-snapshot"
 
 if [ ! -f "$config_file" ]
 then
+crontab -u root -l | grep -v ^# | grep -v "$cron_cmd" | crontab -u root -
 crontab -u root -l | grep -v ^# | grep -v "$cron_cmd" | crontab -u root -
 fi
 
@@ -29,16 +31,95 @@ then
   cp -p "$0" "$create_snapshot_dir"
 fi
 
-if [ ! -d "$create_remchain_dir" ]
-then
-  mkdir -p "$create_remchain_dir"
-  cp -p "$0" "$create_remchain_dir"
-fi
+#----------------------------------------------------------------------------------------------------#
+# GET YES OR NO ANSWER FROM USER                                                                     #
+#----------------------------------------------------------------------------------------------------#
 
-if [ ! -d "$create_testchain_dir" ]
+function get_user_answer_yn(){
+  while :
+  do
+    read -p "$1 [y/n]: " answer
+    answer="$(echo $answer | tr '[:upper:]' '[:lower:]')"
+    case "$answer" in
+      yes|y) return 0 ;;
+      no|n) return 1 ;;
+      *) echo  "Invalid Answer [yes/y/no/n expected]";continue;;
+    esac
+  done
+}
+
+#----------------------------------------------------------------------------------------------------#
+# GET VALUE FROM THE CONFIG FILE, RETURN IT WITH THE VARIABLE "global_value"                         #
+#----------------------------------------------------------------------------------------------------#
+
+function get_config_value() {
+  global_value=$(grep -v '^#' "$config_file" | grep "^$1=" | awk -F '=' '{print $2}')
+  if [ -z "$global_value" ]
+  then
+    return 1
+  else
+    return 0
+  fi
+}
+
+#----------------------------------------------------------------------------------------------------#
+# CREATE CONFIG FILE IF IT DOESN'T EXIST                                                             #
+#----------------------------------------------------------------------------------------------------#
+
+if [ ! -f "$config_file" ]
 then
-  mkdir -p "$create_testchain_dir"
-  cp -p "$0" "$create_testchain_dir"
+  echo "#Configuration file for the unregprod script" > "$config_file"
+  echo "#Make the entries as variable=value" >> "$config_file"
+  echo " " >> "$config_file"
+  
+#----------------------------------------------------------------------------------------------------#
+# GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
+#----------------------------------------------------------------------------------------------------#
+
+if get_config_value testchain_enabled
+then
+  testchain_enabled="$global_value"
+elif ! grep "^testchain_enabled" "$config_file" > /dev/null 2>&1
+then
+  echo ""
+  if get_user_answer_yn "IS THIS FOR A TESTCHAIN SNAPSHOT"
+  then
+    echo ""
+    testchain_enabled=true
+    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
+    if [ ! -d "$create_testchain_dir" ]
+    then
+      mkdir -p "$create_testchain_dir"
+      cp -p "$0" "$create_testchain_dir"
+    fi
+    cd $create_testchain_dir
+    sudo rm -rf take-snapshot
+    sudo rm -rf restore-snapshot
+    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_testchain_dir
+    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
+    if [ ! -z "$testchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$testchain_cron_cmd" &>/dev/null
+    then
+      (crontab -u root -l ; echo "0 3 * * * $testchain_cron_cmd") | crontab -u root -
+    fi
+  else
+    echo ""
+    testchain_enabled=false
+    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
+    if [ ! -d "$create_remchain_dir" ]
+    then
+      mkdir -p "$create_remchain_dir"
+      cp -p "$0" "$create_remchain_dir"
+    fi
+    cd $create_remchain_dir
+    sudo rm -rf take-snapshot
+    sudo rm -rf restore-snapshot
+    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_remchain_dir
+    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
+    if [ ! -z "$remchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$remchain_cron_cmd" &>/dev/null
+    then
+      (crontab -u root -l ; echo "0 3 * * * $remchain_cron_cmd") | crontab -u root -
+    fi
+  fi
 fi
 
 #----------------------------------------------------------------------------------------------------#
@@ -46,19 +127,3 @@ fi
 #----------------------------------------------------------------------------------------------------#
 
 sudo apt-get install jq -y
-cd $create_testchain_dir
-sudo rm -rf take-snapshot
-sudo rm -rf restore-snapshot
-sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_remchain_dir
-sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_testchain_dir
-sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
-sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
-
-#----------------------------------------------------------------------------------------------------#
-# INSTALL CRONTAB LINE IF IT DOESN'T EXIST                                                           #
-#----------------------------------------------------------------------------------------------------#
-
-if [ ! -z "$cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$cron_cmd" &>/dev/null
-then
-  (crontab -u root -l ; echo "0 3 * * * $cron_cmd") | crontab -u root -
-fi
