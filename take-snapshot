@@ -19,7 +19,6 @@ fi
 #----------------------------------------------------------------------------------------------------#
 
 date_name=$(date +%Y-%m-%d_%H-%M)
-sh_create=compressandsendlastsnapshot.sh
 remchain_compressed_folder=/root/data/snapshots/compressed/
 testchain_compressed_folder=/root/data/snapshots/compressed/
 
