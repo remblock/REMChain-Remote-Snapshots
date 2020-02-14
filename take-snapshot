@@ -1,23 +1,47 @@
 #!/bin/bash
-###### Parameter Section #####
-ssh_port=466
+
+#****************************************************************************************************#
+#                                            TAKE-SNAPSHOT                                           #
+#****************************************************************************************************#
+
+#----------------------------------------------------------------------------------------------------#
+# IF THE USER HAS NO ROOT PERMISSIONS THE SCRIPT WILL EXIT                                           #
+#----------------------------------------------------------------------------------------------------#
+
+if (($EUID!=0))
+then
+  echo "You must be root to run this script" 2>&1
+  exit 1
+fi
+
+#----------------------------------------------------------------------------------------------------#
+# CONFIGURATION VARIABLES                                                                            #
+#----------------------------------------------------------------------------------------------------#
+
 date_name=$(date +%Y-%m-%d_%H-%M)
 sh_create=compressandsendlastsnapshot.sh
-cd ~
 remchain_compressed_folder=/root/data/snapshots/compressed/
 testchain_compressed_folder=/root/data/snapshots/compressed/
-filename="$compressedfolder$date_name.tar.gz"
-mkdir -p $compressedfolder
-snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
 
+#----------------------------------------------------------------------------------------------------#
+# MAIN PART OF THE SCRIPT                                                                            #
+#----------------------------------------------------------------------------------------------------#
 
-rm -f $shcreate
-touch $shcreate && chmod +x $shcreate
-
-#List all .gz files especially the last 5 by filename aand remove the rest
-ls -F *.gz | head -n -5 | xargs -r rm
-
-echo "tar -cvzf $filename $snapname" >> $shcreate
-rm -f $snapname
-echo "rsync -rv -e 'ssh -p $sshportno' --progress $filename root@website.geordier.co.uk:/var/www/geordier.co.uk/snapshots" >> $shcreate
-./$shcreate
+if grep "^testchain_enabled=true" "$config_file" > /dev/null 2>&1
+then
+  if [ ! -d "$testchain_compressed_folder" ]
+  then
+    mkdir -p "$testchain_compressed_folder"
+    cp -p "$0" "$testchain_compressed_folder"
+  fi
+  filename="$testchain_compressed_folder$date_name.tar.gz"
+  snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+else
+  if [ ! -d "$remchain_compressed_folder" ]
+  then
+    mkdir -p "$remchain_compressed_folder"
+    cp -p "$0" "$remchain_compressed_folder"
+  fi
+  filename="$remchain_compressed_folder$date_name.tar.gz"
+  snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+fi
