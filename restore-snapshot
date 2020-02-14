@@ -1,0 +1,148 @@
+#!/bin/bash
+
+#****************************************************************************************************#
+#                                          RESTORE-SNAPSHOT                                          #
+#****************************************************************************************************#
+
+#----------------------------------------------------------------------------------------------------#
+# IF THE USER HAS NO ROOT PERMISSIONS THE SCRIPT WILL EXIT                                           #
+#----------------------------------------------------------------------------------------------------#
+
+if (($EUID!=0))
+then
+  echo "You must be root to run this script" 2>&1
+  exit 1
+fi
+
+#----------------------------------------------------------------------------------------------------#
+# CONFIGURATION VARIABLES                                                                            #
+#----------------------------------------------------------------------------------------------------#
+
+data_folder=/root/data
+log_file=/root/remnode.log
+config_folder=/root/config
+snapshot_folder=$data_folder/snapshots
+create_remchain_dir="/root/data/snapshots/remchain"
+create_testchain_dir="/root/data/snapshots/testchain"
+config_file="/root/remblock/remchain-snapshot/config"
+
+#----------------------------------------------------------------------------------------------------#
+# GET YES OR NO ANSWER FROM USER                                                                     #
+#----------------------------------------------------------------------------------------------------#
+
+function get_user_answer_yn(){
+  while :
+  do
+    read -p "$1 [y/n]: " answer
+    answer="$(echo $answer | tr '[:upper:]' '[:lower:]')"
+    case "$answer" in
+      yes|y) return 0 ;;
+      no|n) return 1 ;;
+      *) echo  "Invalid Answer [yes/y/no/n expected]";continue;;
+    esac
+  done
+}
+
+#----------------------------------------------------------------------------------------------------#
+# GET VALUE FROM THE CONFIG FILE, RETURN IT WITH THE VARIABLE "global_value"                         #
+#----------------------------------------------------------------------------------------------------#
+
+function get_config_value() {
+  global_value=$(grep -v '^#' "$config_file" | grep "^$1=" | awk -F '=' '{print $2}')
+  if [ -z "$global_value" ]
+  then
+    return 1
+  else
+    return 0
+  fi
+}
+
+#----------------------------------------------------------------------------------------------------#
+# CREATE CONFIG FILE IF IT DOESN'T EXIST                                                             #
+#----------------------------------------------------------------------------------------------------#
+
+if [ ! -f "$config_file" ]
+then
+  echo "#Configuration file for the unregprod script" > "$config_file"
+  echo "#Make the entries as variable=value" >> "$config_file"
+  echo " " >> "$config_file"
+  
+#----------------------------------------------------------------------------------------------------#
+# GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
+#----------------------------------------------------------------------------------------------------#
+
+if get_config_value testchain_enabled
+then
+  testchain_enabled="$global_value"
+elif ! grep "^testchain_enabled" "$config_file" > /dev/null 2>&1
+then
+  echo ""
+  if get_user_answer_yn "RESTORING TESTCHAIN SNAPSHOT"
+  then
+    testchain_enabled=true
+    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
+  else
+    testchain_enabled=false
+    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
+  fi
+fi
+if $testchain_enabled
+then  
+  if [ ! -d "$create_testchain_dir" ]
+  then
+    mkdir -p "$create_testchain_dir"
+    cp -p "$0" "$create_testchain_dir"
+  fi
+  testchain_blocks_folder=$data_folder/testchain/blocks
+  state_folder=$data_folder/testchain/state
+  last_download_folder=$snapshot_folder/testchain/lastdownload
+  cd $last_download_folder
+  rm -f *.bin
+  latest_snapshot=$(last_download_folder)
+  bin_file=$last_download_folder/*.bin
+  remnode_pid=$(pgrep remnode)
+  if [ ! -z "$remnode_pid" ]
+  then
+    if ps -p $remnode_pid > /dev/null
+    then
+      kill -SIGINT $remnode_pid
+    fi
+    while ps -p $remnode_pid > /dev/null; do
+        sleep 1
+    done
+   fi
+   rm -rf $testchain_blocks_folder*/
+   rm -rf $state_folder
+   cd ~
+   remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
+   sleep 3
+   tail -f $log_file
+elif [ ! -d "$create_remchain_dir" ]
+then
+  mkdir -p "$create_remchain_dir"
+  cp -p "$0" "$create_remchain_dir"
+fi
+remchain_blocks_folder=$data_folder/remchain/blocks
+state_folder=$data_folder/remchain/state
+last_download_folder=$snapshot_folder/remchain/lastdownload
+cd $last_download_folder
+rm -f *.bin
+latest_snapshot=$(last_download_folder)
+bin_file=$last_download_folder/*.bin
+remnode_pid=$(pgrep remnode)
+if [ ! -z "$remnode_pid" ]
+then
+  if ps -p $remnode_pid > /dev/null
+  then
+    kill -SIGINT $remnode_pid
+  fi
+  while ps -p $remnode_pid > /dev/null; do
+  sleep 1
+  done
+fi
+rm -rf $remchain_blocks_folder*/
+rm -rf $state_folder
+cd ~
+remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
+sleep 3
+tail -f $log_file
