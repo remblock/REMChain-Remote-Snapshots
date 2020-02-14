@@ -1,11 +1,12 @@
 #!/bin/bash
 ###### Parameter Section #####
-sshportno=466
-datename=$(date +%Y-%m-%d_%H-%M)
-shcreate=compressandsendlastsnapshot.sh
+ssh_port=466
+date_name=$(date +%Y-%m-%d_%H-%M)
+sh_create=compressandsendlastsnapshot.sh
 cd ~
-compressedfolder=/root/data/snapshots/compressed/
-filename="$compressedfolder$datename.tar.gz"
+remchain_compressed_folder=/root/data/snapshots/compressed/
+testchain_compressed_folder=/root/data/snapshots/compressed/
+filename="$compressedfolder$date_name.tar.gz"
 mkdir -p $compressedfolder
 snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
 
