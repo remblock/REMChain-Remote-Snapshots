@@ -4,10 +4,10 @@
 
 ***
 
-### Setup REMChain-Remote-Snapshot:
+### Setup Remote-Snapshot:
 
 ```
-sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/setup-remote-snapshot && sudo chmod u+x setup-remote-snapshot && sudo ./setup-remote-snapshot
+sudo wget https://github.com/remblock/REMChain-Remote-Snapshots/raw/master/setup-remote-snapshot && sudo chmod u+x setup-remote-snapshot && sudo ./setup-remote-snapshot
 ```
 
 
