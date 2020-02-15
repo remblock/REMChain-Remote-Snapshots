@@ -28,62 +28,31 @@ config_file="/root/data/snapshots/config"
 # MAIN PART OF THE SCRIPT                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
-if grep "^testchain_enabled=true" "$config_file" > /dev/null 2>&1
-then  
-  if [ ! -d "$snapshot_folder" ]
-  then
-    mkdir -p "$snapshot_folder"
-    cp -p "$0" "$snapshot_folder"
-  fi
-  blocks_folder=$data_folder/blocks
-  state_folder=$data_folder/state
-  rm -f *.bin
-  latest_snapshot=$(snapshot_folder)
-  bin_file=$snapshot_folder/*.bin
-  remnode_pid=$(pgrep remnode)
-  if [ ! -z "$remnode_pid" ]
-  then
-    if ps -p $remnode_pid > /dev/null
-    then
-      kill -SIGINT $remnode_pid
-    fi
-    while ps -p $remnode_pid > /dev/null; do
-    sleep 1
-    done
-   fi
-   rm -rf $blocks_folder*/
-   rm -rf $state_folder
-   cd ~
-   remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
-   sleep 3
-   tail -f $log_file
-else
-  if [ ! -d "$create_snapshot_dir" ]
-  then
-    mkdir -p "$snapshot_folder"
-    cp -p "$0" "$snapshot_folder"
-  fi
-  blocks_folder=$data_folder/blocks
-  state_folder=$data_folder/state
-  rm -f *.bin
-  latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
-  wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
-  bin_file=$snapshot_folder/*.bin
-  remnode_pid=$(pgrep remnode)
-  if [ ! -z "$remnode_pid" ]
-  then
-    if ps -p $remnode_pid > /dev/null
-    then
-      kill -SIGINT $remnode_pid
-    fi
-    while ps -p $remnode_pid > /dev/null; do
-    sleep 1
-    done
-  fi
-  rm -rf $blocks_folder*/
-  rm -rf $state_folder
-  cd ~
-  remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
-  sleep 3
-  tail -f $log_file
+if [ ! -d "$create_snapshot_dir" ]
+then
+  mkdir -p "$snapshot_folder"
+  cp -p "$0" "$snapshot_folder"
 fi
+blocks_folder=$data_folder/blocks
+state_folder=$data_folder/state
+rm -f *.bin
+latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
+wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
+bin_file=$snapshot_folder/*.bin
+remnode_pid=$(pgrep remnode)
+if [ ! -z "$remnode_pid" ]
+then
+  if ps -p $remnode_pid > /dev/null
+  then
+    kill -SIGINT $remnode_pid
+  fi
+  while ps -p $remnode_pid > /dev/null; do
+  sleep 1
+  done
+fi
+rm -rf $blocks_folder*/
+rm -rf $state_folder
+cd ~
+remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
+sleep 3
+tail -f $log_file
