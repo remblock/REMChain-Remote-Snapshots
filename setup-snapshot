@@ -8,18 +8,7 @@
 # CONFIGURATION VARIABLES                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
-config_file="/root/data/snapshots/config"
 create_snapshot_folder="/root/data/snapshots/"
-crontab_cmd="/root/data/snapshots/take-snapshot"
-
-#----------------------------------------------------------------------------------------------------#
-# REMOVE EXISTING CRONTAB LINE IF IT EXIST WHILE CONFIG DOESN'T                                      #
-#----------------------------------------------------------------------------------------------------#
-
-if [ ! -f "$config_file" ]
-then
-crontab -u root -l | grep -v ^# | grep -v "$crontab_cmd" | crontab -u root -
-fi
 
 #----------------------------------------------------------------------------------------------------#
 # INSTALL REMCHAIN SNAPSHOT DEPENDENCIES                                                             #
@@ -40,13 +29,6 @@ fi
 # MAIN PART OF THE SCRIPT                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
-sudo rm -rf take-snapshot -P $create_snapshot_folder
 sudo rm -rf restore-snapshot -P $create_snapshot_folder
-sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_folder
 sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_folder
-chmod +x $create_snapshot_folder/take-snapshot
 chmod +x $create_snapshot_folder/restore-snapshot
-if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
-then
-  (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
-fi
