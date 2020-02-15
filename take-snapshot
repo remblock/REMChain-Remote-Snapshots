@@ -32,7 +32,8 @@ if [ ! -d "$compressed_folder" ]
 then
   mkdir -p "$compressed_folder"
 fi
-snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name') > $compressed_folder
+snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+cd $compressed_folder
 rm -f $shcreate
 touch $shcreate && chmod +x $shcreate
 ls -F *.gz | head -n -5 | xargs -r rm
