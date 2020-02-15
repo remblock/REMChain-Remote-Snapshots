@@ -37,7 +37,7 @@ then
 fi
 
 #----------------------------------------------------------------------------------------------------#
-# GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
+# MAIN PART OF THE SCRIPT                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
 sudo rm -rf take-snapshot -P $create_snapshot_dir
