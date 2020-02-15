@@ -32,4 +32,3 @@ fi
 sudo rm -rf restore-snapshot -P $create_snapshot_folder
 sudo wget https://github.com/remblock/REMChain-Remote-Snapshots/raw/master/restore-remote-snapshot -P $create_snapshot_folder
 chmod +x $create_snapshot_folder/restore-remote-snapshot
-sudo $create_snapshot_folder/restore-remote-snapshot
