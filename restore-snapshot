@@ -37,16 +37,9 @@ then
   fi
   blocks_folder=$data_folder/blocks
   state_folder=$data_folder/state
-  last_download_folder=$snapshot_folder/lastdownload
-  if [ ! -d "$last_download_folder" ]
-  then
-    mkdir -p "$last_download_folder"
-    exit 1
-  fi
-  cd $last_download_folder
   rm -f *.bin
-  latest_snapshot=$(last_download_folder)
-  bin_file=$last_download_folder/*.bin
+  latest_snapshot=$(snapshot_folder)
+  bin_file=$snapshot_folder/*.bin
   remnode_pid=$(pgrep remnode)
   if [ ! -z "$remnode_pid" ]
   then
@@ -55,7 +48,7 @@ then
       kill -SIGINT $remnode_pid
     fi
     while ps -p $remnode_pid > /dev/null; do
-        sleep 1
+    sleep 1
     done
    fi
    rm -rf $blocks_folder*/
@@ -72,16 +65,10 @@ else
   fi
   blocks_folder=$data_folder/blocks
   state_folder=$data_folder/state
-  last_download_folder=$snapshot_folder/lastdownload
-  if [ ! -d "$last_download_folder" ]
-  then
-    mkdir -p "$last_download_folder"
-  fi
-  cd $last_download_folder
   rm -f *.bin
   latest_snapshot=$(curl -s https://geordier.co.uk/snapshots/latestsnapshot.php)
   wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
-  bin_file=$last_download_folder/*.bin
+  bin_file=$snapshot_folder/*.bin
   remnode_pid=$(pgrep remnode)
   if [ ! -z "$remnode_pid" ]
   then
