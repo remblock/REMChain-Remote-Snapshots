@@ -43,7 +43,6 @@ then
   if [ ! -d "$last_download_folder" ]
   then
     mkdir -p "$last_download_folder"
-    cp -p "$0" "$last_download_folder"
     exit 1
   fi
   cd $last_download_folder
@@ -79,7 +78,6 @@ else
   if [ ! -d "$last_download_folder" ]
   then
     mkdir -p "$last_download_folder"
-    cp -p "$0" "$last_download_folder"
   fi
   cd $last_download_folder
   rm -f *.bin
