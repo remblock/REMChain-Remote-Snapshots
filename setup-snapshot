@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #****************************************************************************************************#
-#                                       SETUP-REMCHAIN-SNAPSHOTS                                     #
+#                                      SETUP-REMCHAIN-SNAPSHOTS                                      #
 #****************************************************************************************************#
 
 #----------------------------------------------------------------------------------------------------#
@@ -37,85 +37,16 @@ then
 fi
 
 #----------------------------------------------------------------------------------------------------#
-# GET YES OR NO ANSWER FROM USER                                                                     #
-#----------------------------------------------------------------------------------------------------#
-
-function get_user_answer_yn(){
-  while :
-  do
-    read -p "$1 [y/n]: " answer
-    answer="$(echo $answer | tr '[:upper:]' '[:lower:]')"
-    case "$answer" in
-      yes|y) return 0 ;;
-      no|n) return 1 ;;
-      *) echo  "Invalid Answer [yes/y/no/n expected]";continue;;
-    esac
-  done
-}
-
-#----------------------------------------------------------------------------------------------------#
-# GET VALUE FROM THE CONFIG FILE, RETURN IT WITH THE VARIABLE "global_value"                         #
-#----------------------------------------------------------------------------------------------------#
-
-function get_config_value() {
-  global_value=$(grep -v '^#' "$config_file" | grep "^$1=" | awk -F '=' '{print $2}')
-  if [ -z "$global_value" ]
-  then
-    return 1
-  else
-    return 0
-  fi
-}
-
-#----------------------------------------------------------------------------------------------------#
-# CREATE CONFIG FILE IF IT DOESN'T EXIST                                                             #
-#----------------------------------------------------------------------------------------------------#
-
-if [ ! -f "$config_file" ]
-then
-  echo "#Configuration file for the unregprod script" > "$config_file"
-  echo "#Make the entries as variable=value" >> "$config_file"
-  echo " " >> "$config_file"
-fi
-
-#----------------------------------------------------------------------------------------------------#
 # GET CHAIN DATA IF NOT ALREADY ON THE CONFIG FILE                                                   #
 #----------------------------------------------------------------------------------------------------#
 
-if get_config_value testchain_enabled
+sudo rm -rf take-snapshot -P $create_snapshot_dir
+sudo rm -rf restore-snapshot -P $create_snapshot_dir
+sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
+sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
+chmod +x $create_snapshot_dir/take-snapshot
+chmod +x $create_snapshot_dir/restore-snapshot
+if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
 then
-  testchain_enabled="$global_value"
-elif ! grep "^testchain_enabled" "$config_file" > /dev/null 2>&1
-then
-  echo ""
-  if get_user_answer_yn "IS THIS FOR A TESTCHAIN SNAPSHOT"
-  then
-    echo ""
-    testchain_enabled=true
-    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
-    sudo rm -rf take-snapshot
-    sudo rm -rf restore-snapshot
-    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
-    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
-    chmod +x $create_snapshot_dir/take-snapshot
-    chmod +x $create_snapshot_dir/restore-snapshot
-    if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
-    then
-      (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
-    fi
-  else
-    echo ""
-    testchain_enabled=false
-    printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
-    sudo rm -rf take-snapshot
-    sudo rm -rf restore-snapshot
-    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
-    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
-    chmod +x $create_snapshot_dir/take-snapshot
-    chmod +x $create_snapshot_dir/restore-snapshot
-    if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
-    then
-      (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
-    fi
-  fi
+  (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
 fi
