@@ -9,7 +9,7 @@
 #----------------------------------------------------------------------------------------------------#
 
 config_file="/root/data/snapshots/config"
-create_snapshot_dir="/root/data/snapshots/"
+create_snapshot_folder="/root/data/snapshots/"
 crontab_cmd="/root/data/snapshots/take-snapshot"
 
 #----------------------------------------------------------------------------------------------------#
@@ -31,21 +31,21 @@ sudo apt-get install jq -y
 # CREATE DIRECTORY IF IT DOESN'T EXIST                                                               #
 #----------------------------------------------------------------------------------------------------#
 
-if [ ! -d "$create_snapshot_dir" ]
+if [ ! -d "$create_snapshot_folder" ]
 then
-  mkdir -p "$create_snapshot_dir"
+  mkdir -p "$create_snapshot_folder"
 fi
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
-sudo rm -rf take-snapshot -P $create_snapshot_dir
-sudo rm -rf restore-snapshot -P $create_snapshot_dir
-sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
-sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
-chmod +x $create_snapshot_dir/take-snapshot
-chmod +x $create_snapshot_dir/restore-snapshot
+sudo rm -rf take-snapshot -P $create_snapshot_folder
+sudo rm -rf restore-snapshot -P $create_snapshot_folder
+sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_folder
+sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_folder
+chmod +x $create_snapshot_folder/take-snapshot
+chmod +x $create_snapshot_folder/restore-snapshot
 if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
 then
   (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
