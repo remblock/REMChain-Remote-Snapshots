@@ -28,27 +28,13 @@ filename="$compressed_folder$date_name.tar.gz"
 # MAIN PART OF THE SCRIPT                                                                            #
 #----------------------------------------------------------------------------------------------------#
 
-if grep "^testchain_enabled=true" "$config_file" > /dev/null 2>&1
+if [ ! -d "$compressed_folder" ]
 then
-  if [ ! -d "$compressed_folder" ]
-  then
-    mkdir -p "$compressed_folder"
-  fi
-  filename="$compressed_folder$date_name.tar.gz"
-  snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
-  rm -f $shcreate
-  touch $shcreate && chmod +x $shcreate
-  ls -F *.gz | head -n -5 | xargs -r rm
-  echo "tar -cvzf $filename $snapname" >> $shcreate
-else
-  if [ ! -d "$compressed_folder" ]
-  then
-    mkdir -p "$compressed_folder"
-  fi
-  filename="$compressed_folder$date_name.tar.gz"
-  snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
-  rm -f $shcreate
-  touch $shcreate && chmod +x $shcreate
-  ls -F *.gz | head -n -5 | xargs -r rm
-  echo "tar -cvzf $filename $snapname" >> $shcreate
+  mkdir -p "$compressed_folder"
 fi
+filename="$compressed_folder$date_name.tar.gz"
+snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+#rm -f $shcreate
+#touch $shcreate && chmod +x $shcreate
+#ls -F *.gz | head -n -5 | xargs -r rm
+#echo "tar -cvzf $filename $snapname" >> $shcreate
