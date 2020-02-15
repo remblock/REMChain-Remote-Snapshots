@@ -10,10 +10,7 @@
 
 config_file="/root/data/snapshots/config"
 create_snapshot_dir="/root/data/snapshots/"
-create_remchain_dir="/root/data/snapshots/remchain"
-create_testchain_dir="/root/data/snapshots/testchain"
-remchain_cron_cmd="/root/data/snapshots/remchain/take-snapshot"
-testchain_cron_cmd="/root/data/snapshots/testchain/take-snapshot"
+crontab_cmd="/root/data/snapshots/take-snapshot"
 
 #----------------------------------------------------------------------------------------------------#
 # REMOVE EXISTING CRONTAB LINE IF IT EXIST WHILE CONFIG DOESN'T                                      #
@@ -21,8 +18,7 @@ testchain_cron_cmd="/root/data/snapshots/testchain/take-snapshot"
 
 if [ ! -f "$config_file" ]
 then
-crontab -u root -l | grep -v ^# | grep -v "$cron_cmd" | crontab -u root -
-crontab -u root -l | grep -v ^# | grep -v "$cron_cmd" | crontab -u root -
+crontab -u root -l | grep -v ^# | grep -v "$crontab_cmd" | crontab -u root -
 fi
 
 #----------------------------------------------------------------------------------------------------#
@@ -97,40 +93,29 @@ then
     echo ""
     testchain_enabled=true
     printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
-    if [ ! -d "$create_testchain_dir" ]
-    then
-      mkdir -p "$create_testchain_dir"
-    fi
-    cd $create_testchain_dir
     sudo rm -rf take-snapshot
     sudo rm -rf restore-snapshot
-    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_testchain_dir
-    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_testchain_dir
-    chmod +x $create_testchain_dir/take-snapshot
-    chmod +x $create_testchain_dir/restore-snapshot
-    if [ ! -z "$testchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$testchain_cron_cmd" &>/dev/null
+    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
+    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
+    chmod +x $create_snapshot_dir/take-snapshot
+    chmod +x $create_snapshot_dir/restore-snapshot
+    if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
     then
-      (crontab -u root -l ; echo "0 3 * * * $testchain_cron_cmd") | crontab -u root -
+      (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
     fi
   else
     echo ""
     testchain_enabled=false
     printf -- "%s\n" "testchain_enabled=$testchain_enabled" >> "$config_file"
-    if [ ! -d "$create_remchain_dir" ]
-    then
-      mkdir -p "$create_remchain_dir"
-      cp -p "$0" "$create_remchain_dir"
-    fi
-    cd $create_remchain_dir
     sudo rm -rf take-snapshot
     sudo rm -rf restore-snapshot
-    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_remchain_dir
-    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_remchain_dir
-    chmod +x $create_remchain_dir/take-snapshot
-    chmod +x $create_remchain_dir/restore-snapshot
-    if [ ! -z "$remchain_cron_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$remchain_cron_cmd" &>/dev/null
+    sudo wget https://raw.githubusercontent.com/remblock/REMChain-Snapshots/master/take-snapshot -P $create_snapshot_dir
+    sudo wget https://github.com/remblock/REMChain-Snapshots/raw/master/restore-snapshot -P $create_snapshot_dir
+    chmod +x $create_snapshot_dir/take-snapshot
+    chmod +x $create_snapshot_dir/restore-snapshot
+    if [ ! -z "$crontab_cmd" ] && ! crontab -u root -l | grep -v '^ *#' | grep "$crontab_cmd" &>/dev/null
     then
-      (crontab -u root -l ; echo "0 3 * * * $remchain_cron_cmd") | crontab -u root -
+      (crontab -u root -l ; echo "0 3 * * * $crontab_cmd") | crontab -u root -
     fi
   fi
 fi
