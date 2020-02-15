@@ -21,7 +21,7 @@ fi
 date_name=$(date +%Y-%m-%d_%H-%M)
 shcreate=compressandsendlastsnapshot.sh
 config_file="/root/data/snapshots/config"
-compressed_folder=/root/data/snapshots/compressed/
+compressed_folder=/root/data/snapshots/compressed-snapshot/
 filename="$compressed_folder$date_name.tar.gz"
 
 #----------------------------------------------------------------------------------------------------#
@@ -34,7 +34,7 @@ then
 fi
 filename="$compressed_folder$date_name.tar.gz"
 snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name') > $compressed_folder
-#rm -f $shcreate
-#touch $shcreate && chmod +x $shcreate
-#ls -F *.gz | head -n -5 | xargs -r rm
-#echo "tar -cvzf $filename $snapname" >> $shcreate
+rm -f $shcreate
+touch $shcreate && chmod +x $shcreate
+ls -F *.gz | head -n -5 | xargs -r rm
+echo "tar -cvzf $filename $snapname" >> $shcreate
