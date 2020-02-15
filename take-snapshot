@@ -21,10 +21,8 @@ fi
 date_name=$(date +%Y-%m-%d_%H-%M)
 shcreate=compressandsendlastsnapshot.sh
 config_file="/root/data/snapshots/config"
-remchain_compressed_folder=/root/data/snapshots/compressed/
-testchain_compressed_folder=/root/data/snapshots/compressed/
-remchain_filename="$remchain_compressed_folder$date_name.tar.gz"
-testchain_filename="$testchain_compressed_folder$date_name.tar.gz"
+compressed_folder=/root/data/snapshots/compressed/
+filename="$compressed_folder$date_name.tar.gz"
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
@@ -32,27 +30,25 @@ testchain_filename="$testchain_compressed_folder$date_name.tar.gz"
 
 if grep "^testchain_enabled=true" "$config_file" > /dev/null 2>&1
 then
-  if [ ! -d "$testchain_compressed_folder" ]
+  if [ ! -d "$compressed_folder" ]
   then
-    mkdir -p "$testchain_compressed_folder"
-    cp -p "$0" "$testchain_compressed_folder"
+    mkdir -p "$compressed_folder"
   fi
-  filename="$testchain_compressed_folder$date_name.tar.gz"
+  filename="$compressed_folder$date_name.tar.gz"
   snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
   rm -f $shcreate
   touch $shcreate && chmod +x $shcreate
   ls -F *.gz | head -n -5 | xargs -r rm
-  echo "tar -cvzf $testchain_filename $snapname" >> $shcreate
+  echo "tar -cvzf $filename $snapname" >> $shcreate
 else
-  if [ ! -d "$remchain_compressed_folder" ]
+  if [ ! -d "$compressed_folder" ]
   then
     mkdir -p "$remchain_compressed_folder"
-    cp -p "$0" "$remchain_compressed_folder"
   fi
-  filename="$remchain_compressed_folder$date_name.tar.gz"
+  filename="$compressed_folder$date_name.tar.gz"
   snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
   rm -f $shcreate
   touch $shcreate && chmod +x $shcreate
   ls -F *.gz | head -n -5 | xargs -r rm
-  echo "tar -cvzf $remchain_filename $snapname" >> $shcreate
+  echo "tar -cvzf $filename $snapname" >> $shcreate
 fi
