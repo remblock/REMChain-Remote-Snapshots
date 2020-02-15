@@ -38,3 +38,4 @@ rm -f $shcreate
 touch $shcreate && chmod +x $shcreate
 ls -F *.gz | head -n -5 | xargs -r rm
 echo "tar -cvzf $filename $snapname" >> $shcreate
+./$shcreate
