@@ -20,7 +20,7 @@ fi
 
 date_name=$(date +%Y-%m-%d_%H-%M)
 config_file="/root/data/snapshots/config"
-compressed_folder=/root/data/snapshots/compressed-snapshot/
+compressed_folder="/root/data/snapshots/compressed-snapshot/"
 filename="$compressed_folder$date_name.tar.gz"
 
 #----------------------------------------------------------------------------------------------------#
