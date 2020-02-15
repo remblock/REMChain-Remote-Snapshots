@@ -23,8 +23,6 @@ log_file=/root/remnode.log
 config_folder=/root/config
 snapshot_folder=$data_folder/snapshots
 config_file="/root/data/snapshots/config"
-create_remchain_dir="/root/data/snapshots/remchain"
-create_testchain_dir="/root/data/snapshots/testchain"
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
@@ -32,14 +30,14 @@ create_testchain_dir="/root/data/snapshots/testchain"
 
 if grep "^testchain_enabled=true" "$config_file" > /dev/null 2>&1
 then  
-  if [ ! -d "$create_testchain_dir" ]
+  if [ ! -d "$snapshot_folder" ]
   then
-    mkdir -p "$create_testchain_dir"
-    cp -p "$0" "$create_testchain_dir"
+    mkdir -p "$snapshot_folder"
+    cp -p "$0" "$snapshot_folder"
   fi
-  testchain_blocks_folder=$data_folder/testchain/blocks
-  state_folder=$data_folder/testchain/state
-  last_download_folder=$snapshot_folder/testchain/lastdownload
+  blocks_folder=$data_folder/blocks
+  state_folder=$data_folder/state
+  last_download_folder=$snapshot_folder/lastdownload
   if [ ! -d "$last_download_folder" ]
   then
     mkdir -p "$last_download_folder"
@@ -60,21 +58,21 @@ then
         sleep 1
     done
    fi
-   rm -rf $testchain_blocks_folder*/
+   rm -rf $blocks_folder*/
    rm -rf $state_folder
    cd ~
    remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
    sleep 3
    tail -f $log_file
 else
-  if [ ! -d "$create_remchain_dir" ]
+  if [ ! -d "$create_snapshot_dir" ]
   then
-    mkdir -p "$create_remchain_dir"
-    cp -p "$0" "$create_remchain_dir"
+    mkdir -p "$snapshot_folder"
+    cp -p "$0" "$snapshot_folder"
   fi
-  remchain_blocks_folder=$data_folder/remchain/blocks
-  state_folder=$data_folder/remchain/state
-  last_download_folder=$snapshot_folder/remchain/lastdownload
+  blocks_folder=$data_folder/blocks
+  state_folder=$data_folder/state
+  last_download_folder=$snapshot_folder/lastdownload
   if [ ! -d "$last_download_folder" ]
   then
     mkdir -p "$last_download_folder"
@@ -95,7 +93,7 @@ else
     sleep 1
     done
   fi
-  rm -rf $remchain_blocks_folder*/
+  rm -rf $blocks_folder*/
   rm -rf $state_folder
   cd ~
   remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder/ >> $log_file 2>&1 &
