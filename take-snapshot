@@ -19,9 +19,12 @@ fi
 #----------------------------------------------------------------------------------------------------#
 
 date_name=$(date +%Y-%m-%d_%H-%M)
+shcreate=compressandsendlastsnapshot.sh
 config_file="/root/data/snapshots/config"
 remchain_compressed_folder=/root/data/snapshots/compressed/
 testchain_compressed_folder=/root/data/snapshots/compressed/
+remchain_filename="$remchain_compressed_folder$date_name.tar.gz"
+testchain_filename="$testchain_compressed_folder$date_name.tar.gz"
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
@@ -36,6 +39,10 @@ then
   fi
   filename="$testchain_compressed_folder$date_name.tar.gz"
   snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+  rm -f $shcreate
+  touch $shcreate && chmod +x $shcreate
+  ls -F *.gz | head -n -5 | xargs -r rm
+  echo "tar -cvzf $testchain_filename $snapname" >> $shcreate
 else
   if [ ! -d "$remchain_compressed_folder" ]
   then
@@ -44,4 +51,8 @@ else
   fi
   filename="$remchain_compressed_folder$date_name.tar.gz"
   snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
+  rm -f $shcreate
+  touch $shcreate && chmod +x $shcreate
+  ls -F *.gz | head -n -5 | xargs -r rm
+  echo "tar -cvzf $remchain_filename $snapname" >> $shcreate
 fi
