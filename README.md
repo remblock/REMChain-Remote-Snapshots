@@ -18,8 +18,7 @@ cd snapshots
 sudo ./restore-remote-snapshot
 ```
 
-#### Once everything has synced use Ctrl + C to cancel out, next fire up REMNODE right away using the code below
+#### Once everything is synced press Ctrl + C to cancel out, then fire up REMNODE right away using the code below
 ```
 remnode --config-dir ./config/ --data-dir ./data/ >> remnode.log 2>&1 &
 ```
-#### Now when you press Ctrl + C, it will run successfully in the background this time.
