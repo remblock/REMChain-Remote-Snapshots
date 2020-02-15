@@ -22,7 +22,7 @@ data_folder="/root/data"
 log_file="/root/remnode.log"
 config_folder="/root/config"
 create_snapshot_folder="data_folder/snapshots"
-compressed_folder="$create_snapshot_folder/compressed-snapshot"
+compressed_folder="create_snapshot_folder/compressed-snapshot"
 
 #----------------------------------------------------------------------------------------------------#
 # MAIN PART OF THE SCRIPT                                                                            #
