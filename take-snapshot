@@ -43,7 +43,7 @@ then
 else
   if [ ! -d "$compressed_folder" ]
   then
-    mkdir -p "$remchain_compressed_folder"
+    mkdir -p "$compressed_folder"
   fi
   filename="$compressed_folder$date_name.tar.gz"
   snapname=$(curl http://127.0.0.1:8888/v1/producer/create_snapshot | jq '.snapshot_name')
