@@ -1,6 +1,6 @@
 # REMChain-Remote-Snapshot
 
-#### This script will restore and resync your chain by using the latest snapshot from Geordie-R (geordierembp).
+#### This script will restore and resync your chain by using the latest snapshot provided by Geordie-R (geordierembp).
 
 ***
 
