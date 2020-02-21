@@ -52,4 +52,4 @@ fi
 rm -rf $blocks_folder*/
 rm -rf $state_folder
 cd ~
-remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder --genesis-json genesis.json
+remnode --config-dir $config_folder/ --snapshot $bin_file --data-dir $data_folder >> $log_file 2>&1 &
