@@ -35,7 +35,7 @@ fi
 blocks_folder=$data_folder/blocks
 state_folder=$data_folder/state
 rm -f *.bin
-latest_snapshot="2020-02-21_00-00.tar.gz"
+latest_snapshot="2020-02-20_18-00.tar.gz"
 wget -c https://www.geordier.co.uk/snapshots/$latest_snapshot -O - | sudo tar -xz --strip=4
 bin_file=$create_snapshot_folder/*.bin
 remnode_pid=$(pgrep remnode)
