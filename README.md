@@ -17,8 +17,3 @@ cd data
 cd snapshots
 sudo ./restore-remote-snapshot
 ```
-
-#### Once everything is synced press Ctrl + C to cancel out, then fire up REMNODE right away using the code below:
-```
-remnode --config-dir ./config/ --data-dir ./data/ >> remnode.log 2>&1 &
-```
