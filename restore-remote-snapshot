@@ -78,3 +78,8 @@ echo ""
 sleep 2
 
 done
+echo ""
+echo "==============================="
+echo "REMCHAIN-SNAPSHOT HAS COMPLETED"
+echo "==============================="
+echo ""
