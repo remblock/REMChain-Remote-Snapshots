@@ -14,6 +14,7 @@ create_snapshot_folder="/root/data/snapshots"
 # INSTALL REMCHAIN SNAPSHOT DEPENDENCIES                                                             #
 #----------------------------------------------------------------------------------------------------#
 
+sudo apt install curl -y
 sudo apt-get install jq -y
 
 #----------------------------------------------------------------------------------------------------#
