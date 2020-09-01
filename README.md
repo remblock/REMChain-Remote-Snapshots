@@ -1,19 +1,11 @@
-# REMChain-Remote-Snapshot
+# ORE-RESTORE-SNAPSHOT
 
-#### This script will restore and resync your chain by using the latest snapshot provided by Geordie-R (geordierembp).
+#### This script will restore and resync your chain by using the latest snapshot provided on ore.remblock.io/snapshots
 
 ***
 
-#### Setup remote-snapshot using the code below:
+#### Setup ore-restore-snapshot using the code below:
 
 ```
-sudo wget https://github.com/remblock/REMChain-Remote-Snapshots/raw/master/setup-remote-snapshot && sudo chmod u+x setup-remote-snapshot && sudo ./setup-remote-snapshot
-```
-
-#### Now we need activate the restore-remote-snapshot:
-
-```
-cd data
-cd snapshots
-sudo ./restore-remote-snapshot
+sudo wget https://github.com/remblock/ORE-Protocol/raw/master/ore-restore-snapshot.sh && sudo chmod u+x ore-restore-snapshot.sh && sudo ./ore-restore-snapshot.sh
 ```
